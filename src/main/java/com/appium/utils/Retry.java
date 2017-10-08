@@ -1,28 +1,38 @@
 package com.appium.utils;
 
 import com.annotation.values.RetryCount;
-import com.appium.manager.ConfigurationManager;
+import com.appium.manager.ConfigFileManager;
+import com.appium.manager.ReportManager;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Retry implements IRetryAnalyzer {
-    private final ConfigurationManager prop;
-    private int retryCount = 0;
     private int maxRetryCount;
+    private ConfigFileManager prop;
+    private Map<String, Integer> retryCounts = new HashMap<String, Integer>();
 
-    public Retry() throws IOException {
-        prop = ConfigurationManager.getInstance();
+    public Retry() {
+        try {
+            prop = ConfigFileManager.getInstance();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public boolean retry(ITestResult result) {
-        Method[] methods = result.getInstance().getClass().getMethods();
+    @Override
+    public boolean retry(ITestResult iTestResult) {
+        int counter = 0;
+        int retryCountForTest = 0;
+        String methodName = iTestResult.getMethod().getMethodName();
+        Object[] obj = iTestResult.getParameters();
+        Method[] methods = iTestResult.getInstance().getClass().getMethods();
         for (Method m : methods) {
-            if (m.getName().equals(result.getMethod().getMethodName())) {
+            if (m.getName().equals(iTestResult.getMethod().getMethodName())) {
                 if (m.isAnnotationPresent(RetryCount.class)) {
                     RetryCount ta = m.getAnnotation(RetryCount.class);
                     maxRetryCount = ta.maxRetryCount();
@@ -34,22 +44,28 @@ public class Retry implements IRetryAnalyzer {
                     }
                 }
             }
-
-        }
-        if (result.getStatus() == ITestResult.FAILURE) {
-            System.out.println("Test Failed");
-            if (retryCount == maxRetryCount) {
-                System.out.println("Log report");
-            }
-            if (retryCount < maxRetryCount) {
-                retryCount++;
-                System.out.println(
-                        "Retrying Failed Test Cases " + retryCount + "out of " + maxRetryCount);
-                return true;
-
-            }
         }
 
+        while (obj.length != counter) {
+            methodName = methodName + "_" + obj[counter];
+            counter ++;
+        }
+
+        if (retryCounts.containsKey(methodName)) {
+            retryCountForTest = retryCounts.get(methodName);
+            retryCountForTest++;
+        }
+
+        if (!iTestResult.isSuccess() && retryCountForTest < maxRetryCount) {
+            System.out.println(methodName
+                    + " execution failed in count: " + retryCountForTest + "\n");
+            retryCounts.put(methodName, retryCountForTest);
+            return true;
+        } else if (!iTestResult.isSuccess() && retryCountForTest == maxRetryCount) {
+            System.out.println(methodName
+                    + " execution failed in count: " + maxRetryCount + "\n");
+            return false;
+        }
         return false;
     }
 }

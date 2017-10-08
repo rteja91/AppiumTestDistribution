@@ -3,9 +3,8 @@ package com.appium.executor;
 
 import static junit.framework.TestCase.assertTrue;
 
-
-import com.appium.manager.AppiumParallelTest;
-import com.appium.utils.MobilePlatform;
+import com.appium.entities.MobilePlatform;
+import com.appium.manager.DeviceManager;
 import org.testng.annotations.Test;
 import org.testng.xml.XmlSuite;
 
@@ -50,12 +49,45 @@ public class MyTestExecutorTest {
         List<String> tc = new ArrayList<>();
 
         XmlSuite xmlSuite =
-            ex1.constructXmlSuiteForDistribution("com.appium.executor",
-                tc, ex1.createTestsMap(methods),
-                devices.size());
+                ex1.constructXmlSuiteForDistribution("com.appium.executor",
+                        tc, ex1.createTestsMap(methods),
+                        devices.size());
         System.out.println("xml:" + xmlSuite.toXml());
         assertTrue(true);
     }
+
+
+    @Test public void testXmlSuiteCreationForMethodParallel() {
+        Set<Method> methods = new HashSet<>();
+        ArrayList<String> devices = new ArrayList<>();
+        devices.add("192.168.0.1");
+        devices.add("192.168.0.2");
+        devices.add("192.168.0.3");
+        devices.add("192.168.0.4");
+        Method[] thizMethods = MyTestExecutorTest.class.getMethods();
+        for (Method m : thizMethods) {
+            methods.add(m);
+        }
+
+        Method[] otherMethods = OtherTests.class.getMethods();
+        for (Method m : otherMethods) {
+            methods.add(m);
+        }
+
+        Method[] otherMethods1 = OtherTests1.class.getMethods();
+        for (Method m : otherMethods1) {
+            methods.add(m);
+        }
+        List<String> tc = new ArrayList<>();
+
+        XmlSuite xmlSuite =
+                ex1.constructXmlSuiteForDistributionMethods("com.appium.executor",
+                        tc, ex1.createTestsMap(methods),
+                        devices.size());
+        System.out.println("xml:" + xmlSuite.toXml());
+        assertTrue(true);
+    }
+
 
     @Test public void testXmlSuiteCreationCucumber() {
         Set<Method> methods = new HashSet<>();
@@ -81,7 +113,7 @@ public class MyTestExecutorTest {
         XmlSuite xmlSuite =
             ex1.constructXmlSuiteForParallelCucumber(devices.size(), devices);
         System.out.println("xml:" + xmlSuite.toXml());
-        File file = new File(System.getProperty("user.dir") + "/target/parallelCucumber.xml");
+        File file = new File(System.getProperty("user.dir") + "/target/parallel.xml");
         FileWriter fw = null;
         try {
             fw = new FileWriter(file.getAbsoluteFile());
@@ -100,12 +132,5 @@ public class MyTestExecutorTest {
             e.printStackTrace();
         }
         assertTrue(true);
-    }
-
-    @Test
-    public void testapp() throws Exception {
-        AppiumParallelTest appiumParallelTest = new AppiumParallelTest();
-        MobilePlatform mobilePlatform = appiumParallelTest.getMobilePlatform("57656757656757");
-        System.out.println(mobilePlatform.toString());
     }
 }

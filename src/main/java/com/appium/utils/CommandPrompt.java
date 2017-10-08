@@ -13,9 +13,8 @@ import java.util.Map;
 
 public class CommandPrompt {
 
-    static Process p;
+    Process p;
     ProcessBuilder builder;
-
 
     public String runCommand(String command) throws InterruptedException, IOException {
         p = Runtime.getRuntime().exec(command);
@@ -54,7 +53,6 @@ public class CommandPrompt {
         String allLine = "";
         while ((line = br.readLine()) != null) {
             allLine = allLine.trim() + "" + line.trim() + "\n";
-            System.out.println(allLine);
         }
         return allLine.trim();
     }

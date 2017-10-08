@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.saikrishna321</groupId>
     <artifactId>AppiumTestDistribution</artifactId>
-    <version>6.0.2-SNAPSHOT</version>
+    <version>7.0.1</version>
     <packaging>jar</packaging>
 
     <name>AppiumTestDistribution</name>
@@ -52,22 +52,23 @@
         <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
-            <version>4.1.2</version>
+            <version>5.0.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.saikrishna321</groupId>
+            <groupId>com.github.temyers</groupId>
             <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-            <version>2.0.9</version>
+            <version>4.2.0</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20141113</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -87,12 +88,12 @@
         <dependency>
             <groupId>net.masterthought</groupId>
             <artifactId>cucumber-reporting</artifactId>
-            <version>2.1.0</version>
+            <version>3.8.0</version>
         </dependency>
         <dependency>
             <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
@@ -102,7 +103,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.9.10</version>
+            <version>6.11</version>
         </dependency>
         <dependency>
             <groupId>org.im4java</groupId>
@@ -139,7 +140,16 @@
             <artifactId>jfiglet</artifactId>
             <version>0.0.7</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.69</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.SrinivasanTarget</groupId>
+            <artifactId>iOSDeviceManager</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

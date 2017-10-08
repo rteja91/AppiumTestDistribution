@@ -8,18 +8,18 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
- * Created by saikrisv on 10/05/16.
+ * Created by saikrisv on 22/06/17.
  */
 public class RetryListener implements IAnnotationTransformer {
 
 
-    @Override public void transform(ITestAnnotation testannotation, Class testClass,
-        Constructor testConstructor, Method testMethod) {
-        IRetryAnalyzer retry = testannotation.getRetryAnalyzer();
+    @Override
+    public void transform(ITestAnnotation iTestAnnotation,
+                          Class aClass, Constructor constructor, Method method) {
+        IRetryAnalyzer retry = iTestAnnotation.getRetryAnalyzer();
 
         if (retry == null) {
-            testannotation.setRetryAnalyzer(Retry.class);
+            iTestAnnotation.setRetryAnalyzer(Retry.class);
         }
-
     }
 }
